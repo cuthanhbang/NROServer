@@ -19,7 +19,7 @@ public class UseSkill {
         Skill skill = p.getSkill(idSkill);
         if (skill != null && System.currentTimeMillis() > p.CSkilldelay) {
             Skill data = Skills.get(idSkill);
-            if (data.skillId != 0) {
+            if (data.getSkillID() != 0) {
             p.CSkill = idSkill;
             }
         }

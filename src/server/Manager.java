@@ -10,8 +10,10 @@ import cache.PartImage;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -56,7 +58,7 @@ public class Manager {
     byte vsItem;
     public static ArrayList<Part> parts;
     static Server server = Server.gI();
-
+    public static ArrayList<ItemOptionTemplate> iOptionTemplates=new  ArrayList<ItemOptionTemplate>();
     public Manager() {
 
         this.loadConfigFile();
@@ -171,12 +173,16 @@ public class Manager {
     //load item database
     public void loadDataBase() {
         SQLManager.create(this.mysql_host, this.mysql_port, this.mysql_database, this.mysql_user, this.mysql_pass);
+        Connection conn = DBService.gI().getConnection();
+        PreparedStatement ps=null;
+        ResultSet res=null;
         int i;
         try {
-            ResultSet res;
+             ps = conn.prepareStatement("SELECT * FROM mob");
+             res = ps.executeQuery();
             JSONArray Option;
             i = 0;
-            for (res = SQLManager.stat.executeQuery("SELECT * FROM `mob`;"); res.next(); ++i) {
+            while (res.next()) {
                 MobTemplate md = new MobTemplate();
                 md.tempId = Integer.parseInt(res.getString("id"));
                 md.name = res.getString("name");
@@ -187,10 +193,13 @@ public class Manager {
                 MobTemplate.entrys.add(md);
             }
             res.close();
+            ps.close();
             //load MAP
+            ps = conn.prepareStatement("SELECT * FROM map");
+            res = ps.executeQuery();
             i = 0;
             byte j;
-            res = SQLManager.stat.executeQuery("SELECT * FROM `map`;");
+
             if (res.last()) {
                 MapTemplate.arrTemplate = new MapTemplate[res.getRow()];
                 res.beforeFirst();
@@ -241,15 +250,42 @@ public class Manager {
             }
 
             res.close();
+            ps.close();
+            //load MAP
+            ps = conn.prepareStatement("SELECT * FROM optionitem");
+            res = ps.executeQuery();
+
+
+            while (res.next()) {
+                ItemOptionTemplate iOptionTemplate = new ItemOptionTemplate();
+
+                iOptionTemplate.id = res.getInt("id");
+                iOptionTemplate.name =res.getString("name");
+                iOptionTemplate.type = res.getInt("type");
+
+                iOptionTemplates.add(iOptionTemplate);
+                for(int s=0;s<iOptionTemplates.size();++s){
+                    Util.debug("id name optionss "+  iOptionTemplates.get(s).name);
+                }
+//
+
+
+            }
+            res.close();
+            ps.close();
+            //load MAP
+            ps = conn.prepareStatement("SELECT * FROM item");
+            res = ps.executeQuery();
             i = 0;
             JSONObject job;
-            for (res = SQLManager.stat.executeQuery("SELECT * FROM `item`;"); res.next(); ++i) {
+            while (res.next()) {
                 
                 ItemTemplate item = new ItemTemplate();
                 item.id = Short.parseShort(res.getString("id"));
                 item.type = Byte.parseByte(res.getString("type"));
                 item.gender = Byte.parseByte(res.getString("gender"));
                 item.name = res.getString("name");
+                item.skill=(byte)res.getInt("skillid");
                 item.description = res.getString("description");
                 item.level = Byte.parseByte(res.getString("level"));
                 item.strRequire = Integer.parseInt(res.getString("strRequire"));
@@ -268,12 +304,15 @@ public class Manager {
 
                 ItemTemplate.entrys.add(item);
             }
-            
-            res.close();
 
+            res.close();
+            ps.close();
+            //load MAP
+            ps = conn.prepareStatement("SELECT * FROM ItemSell");
+            res = ps.executeQuery();
             //load itemShell
             i = 0;
-            res = SQLManager.stat.executeQuery("SELECT * FROM `ItemSell`;");
+
             while (res.next()) {
                 ItemSell sell = new ItemSell();
                 sell.id = Integer.parseInt(res.getString("item_id"));
@@ -303,11 +342,16 @@ public class Manager {
                 ItemSell.itemCanSell.add(sell);
                 i++;
             }
-            res.close();
+
 
             //load Shops
+            res.close();
+            ps.close();
+
+            ps = conn.prepareStatement("SELECT * FROM shop");
+            res = ps.executeQuery();
             i = 0;
-            res = SQLManager.stat.executeQuery("SELECT * FROM `shop`;");
+
             while (res.next()) {
                 Shop shop = new Shop();
                 shop.npcID = Integer.parseInt(res.getString("npcID"));
@@ -328,8 +372,12 @@ public class Manager {
                 i++;
             }
             res.close();
+            ps.close();
+
+            ps = conn.prepareStatement("SELECT * FROM itemtemp");
+            res = ps.executeQuery();
             i = 0;
-            res = SQLManager.stat.executeQuery("SELECT * FROM `itemtemp`;");
+
             while (res.next()) {
                 Item item2 = new Item();
                 item2.idTemp = res.getInt("id");
@@ -340,9 +388,16 @@ public class Manager {
                 i++;
             }
             res.close();
+            ps.close();
+            res.close();
         } catch (Exception var14) {
             var14.printStackTrace();
             System.exit(0);
+        }
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         SQLManager.close();
         SQLManager.create(this.mysql_host, this.mysql_port, this.mysql_database, this.mysql_user, this.mysql_pass);

@@ -31,10 +31,13 @@ public class Server {
     public void init() {
         ItemData.loadDataItem();
         menu = new Menu();
+
         manager = new Manager();
+
         ClanManager.gI().init();
         SkillData.createSkill();
-        
+
+
         this.controller = new Controller();
         cache[0] = GameScr.loadFile("res/cache/NRdata");
         cache[1] = GameScr.loadFile("res/cache/NRmap");

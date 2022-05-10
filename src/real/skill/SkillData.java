@@ -26,41 +26,42 @@ public class SkillData {
             nClasss = new NClass[dis.readByte()];
             for (int j = 0; j < nClasss.length; j++) {
                 nClasss[j] = new NClass();
-                nClasss[j].classId = j;
-                nClasss[j].name = dis.readUTF();
-                nClasss[j].skillTemplates = new SkillTemplate[(int) dis.readByte()];
-                for (int k = 0; k < nClasss[j].skillTemplates.length; k++) {
-                    nClasss[j].skillTemplates[k] = new SkillTemplate();
-                    nClasss[j].skillTemplates[k].id = dis.readByte();
-                    nClasss[j].skillTemplates[k].name = dis.readUTF();
-                    nClasss[j].skillTemplates[k].maxPoint = (int) dis.readByte();
-                    nClasss[j].skillTemplates[k].manaUseType = (int) dis.readByte();
-                    nClasss[j].skillTemplates[k].type = (int) dis.readByte();
-                    nClasss[j].skillTemplates[k].iconId = (int) dis.readShort();
-                    nClasss[j].skillTemplates[k].damInfo = dis.readUTF();
+                nClasss[j].setClassID(j);
+                nClasss[j].setName(dis.readUTF());
+                nClasss[j].setSkillTemplates(new SkillTemplate[(int) dis.readByte()]);
+                for (int k = 0; k < nClasss[j].getSkillTempLates().length; k++) {
+                    nClasss[j].getSkillTempLates()[k] = new SkillTemplate();
+                    nClasss[j].getSkillTempLates()[k].setID( dis.readByte());
+                    nClasss[j].getSkillTempLates()[k].setName(dis.readUTF());
+                    nClasss[j].getSkillTempLates()[k].setMaxPoint( (int) dis.readByte());
+                    nClasss[j].getSkillTempLates()[k].setManaUseType((int) dis.readByte());
+                    nClasss[j].getSkillTempLates()[k].setType((int) dis.readByte());
+                    nClasss[j].getSkillTempLates()[k].setIconID((int)  dis.readShort());
+                    nClasss[j].getSkillTempLates()[k].setDamInfo(dis.readUTF());
                     /*nClasss[j].skillTemplates[k].description = */dis.readUTF();
-                    nClasss[j].skillTemplates[k].skills = new Skill[(int) dis.readByte()];
-                    for (int l = 0; l < nClasss[j].skillTemplates[k].skills.length; l++) {
-                        nClasss[j].skillTemplates[k].skills[l] = new Skill();
-                        nClasss[j].skillTemplates[k].skills[l].skillId = dis.readShort();
-                        nClasss[j].skillTemplates[k].skills[l].template = nClasss[j].skillTemplates[k];
-                        nClasss[j].skillTemplates[k].skills[l].point = (int) dis.readByte();
-                        nClasss[j].skillTemplates[k].skills[l].powRequire = dis.readLong();
-                        nClasss[j].skillTemplates[k].skills[l].manaUse = (int) dis.readShort();
-                        nClasss[j].skillTemplates[k].skills[l].coolDown = dis.readInt();
-                        nClasss[j].skillTemplates[k].skills[l].dx = (int) dis.readShort();
-                        nClasss[j].skillTemplates[k].skills[l].dy = (int) dis.readShort();
-                        nClasss[j].skillTemplates[k].skills[l].maxFight = (int) dis.readByte();
-                        nClasss[j].skillTemplates[k].skills[l].damage = dis.readShort();
-                        nClasss[j].skillTemplates[k].skills[l].price = dis.readShort();
-                        nClasss[j].skillTemplates[k].skills[l].moreInfo = dis.readUTF();
-                        //Skills.add(nClasss[j].skillTemplates[k].skills[l]);
+                    nClasss[j].getSkillTempLates()[k].setSkills(new Skill[(int) dis.readByte()]);
+                    for (int l = 0; l < nClasss[j].getSkillTempLates()[k].getSkills().length; l++) {
+                        nClasss[j].getSkillTempLates()[k].getSkills()[l] = new Skill();
+                        nClasss[j].getSkillTempLates()[k].getSkills()[l].setSkillID(dis.readShort());
+//                        nClasss[j].getSkillTempLates()[k].getSkills()[l].template = ;
+                        nClasss[j].getSkillTempLates()[k].getSkills()[l].setPoint( (int) dis.readByte());
+                        nClasss[j].getSkillTempLates()[k].getSkills()[l].setPowRequire( dis.readLong());
+                        nClasss[j].getSkillTempLates()[k].getSkills()[l].setManaUse((int) dis.readShort());
+                        nClasss[j].getSkillTempLates()[k].getSkills()[l].setCoolDown( dis.readInt());
+                        nClasss[j].getSkillTempLates()[k].getSkills()[l].setDx((int) dis.readShort());
+                        nClasss[j].getSkillTempLates()[k].getSkills()[l].setDy( (int) dis.readShort());
+                        nClasss[j].getSkillTempLates()[k].getSkills()[l].setMaxFight((int) dis.readByte());
+                        nClasss[j].getSkillTempLates()[k].getSkills()[l].setDamage( dis.readShort());
+                        nClasss[j].getSkillTempLates()[k].getSkills()[l].setPrice( dis.readShort());
+                        nClasss[j].getSkillTempLates()[k].getSkills()[l].setMoreInfo(dis.readUTF());
+//                        Skills.add(nClasss[j].getSkillTempLates()[k].getSkills()[l]);
                     }
                 }
+                Util.log("finish createSkill->>>>>>>>>>>" +dis);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Util.log("finish createSkill");
+
     }
 }

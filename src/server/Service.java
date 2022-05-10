@@ -74,7 +74,7 @@ public class Service {
             m.writer().writeShort(p.getDefFull());
             m.writer().writeByte(p.skill.size());
             for (Skill skill : p.skill) {
-                m.writer().writeShort(skill.skillId);
+                m.writer().writeShort((short)skill.getSkillID());
             }
             m.writer().flush();
             p.session.sendMessage(m);
@@ -894,7 +894,7 @@ public class Service {
             ArrayList<Skill> skills = pl.skill;
             msg.writer().writeByte(skills.size());
             for (Skill skill : skills) {
-                msg.writer().writeShort(skill.skillId);
+                msg.writer().writeShort((short)skill.getSkillID());
             }
             //---vang---luong--luongKhoa
             msg.writer().writeInt(pl.vang);
@@ -1158,7 +1158,7 @@ public class Service {
             msg.writer().writeByte(4);
             for (int i = 0; i < 4; i++) {
                 if(skills[i] != null){
-                msg.writer().writeShort(skills[i].skillId);
+                msg.writer().writeShort((short)skills[i].getSkillID());
                 }else{
                 msg.writer().writeShort(-1);
                 msg.writer().writeUTF("Yêu cầu sức mạnh đạt");

@@ -16,6 +16,8 @@ import server.io.Message;
  * @author Admin
  */
 public class useItem {
+
+
     public static void uesItem(Player p, Item item, int index , short id) {
         try {
             int numbagnull = p.getBagNull();
@@ -48,17 +50,47 @@ public class useItem {
                         }
                     }
                     break;
-                case 108:
+
+                default: {
                     Util.log("item name ------------>"+ item.info);
                     ItemTemplate data = ItemTemplate.ItemTemplateID(item.id);
-                    byte skill = (byte) data.id;
+                    Util.log("item name ------------>"+ data.skill);
+                    p.openBookSkill(index,data.skill);
 
-                    p.openBookSkill(index, skill);
-                    break;
-                default: {
-                    p.sendAddchatYellow("Chức năng đang được cập nhật");
+//                    p.sendAddchatYellow("Chức năng đang được cập nhật");
                     break;
                 }
+            }
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public  static void  bookSkill(Player p,int idItem,int index){
+        try {
+            switch (idItem){
+                //Skill trái đất
+                case  94:
+
+                    break;
+                case  95:
+                    p.openBookSkill(index,8);
+                    break;
+                case  96:
+                    p.openBookSkill(index,9);
+                    break;
+                case  97:
+                    p.openBookSkill(index,10);
+                    break;
+                case  98:
+                    p.openBookSkill(index,11);
+                    break;
+                case  99:
+                    p.openBookSkill(index,12);
+                    break;
+                case  100:
+                    p.openBookSkill(index,13);
+                    break;
             }
         }catch (Exception ex) {
             ex.printStackTrace();

@@ -1,6 +1,9 @@
 package real.skill;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import real.item.Item;
+import real.item.ItemOption;
 
 import java.util.ArrayList;
 
@@ -18,50 +21,53 @@ public class SkillTemplate {
         return this.type == 1;
     }
 
-    public byte id;
+    private long id;
+    private long classID;
+    private String name;
+    private long maxPoint;
+    private long manaUseType;
+    private long type;
+    private long iconID;
+    private String[] description;
+    private Skill[] skills;
+    private String damInfo;
 
-    public int classId;
-
-    public String name;
-
-    public int maxPoint;
-
-    public int manaUseType;
-
-    public int type;
-
-    public int iconId;
-
-    public String[] description;
-
-    public Skill[] skills;
-    public static ArrayList<SkillTemplate> entrys = new ArrayList<SkillTemplate>();
-    public ArrayList<SkillOptionTemplate> templates;
-    public String damInfo;
-    public static JSONObject ObjectSkill(Skill skill) {
+    public static JSONObject ObjectItem(Skill item) {
         JSONObject put = new JSONObject();
-        put.put((Object)"id", (Object)skill.skillId);
-        put.put((Object)"point", (Object)skill.point);
+        put.put((Object)"id", (Object)item.getSkillID());
+        put.put((Object)"point", (Object)item.getPoint());
+
+
         return put;
     }
-    public static SkillOptionTemplate Templates(byte id, byte point) {
-        for (SkillTemplate temp : SkillTemplate.entrys) {
-            if (temp.id == id) {
-                for (SkillOptionTemplate data : temp.templates) {
-                    if (data.point == point) {
-                        return data;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-    public static SkillTemplate Templates(int id) {
-        for (SkillTemplate temp : SkillTemplate.entrys) {
-            if (temp.id == id) {
-                return temp;
-            }
-        }
-        return null;
-    }
+
+    public long getID() { return id; }
+    public void setID(long value) { this.id = value; }
+
+    public long getClassID() { return classID; }
+    public void setClassID(long value) { this.classID = value; }
+
+    public String getName() { return name; }
+    public void setName(String value) { this.name = value; }
+
+    public long getMaxPoint() { return maxPoint; }
+    public void setMaxPoint(long value) { this.maxPoint = value; }
+
+    public long getManaUseType() { return manaUseType; }
+    public void setManaUseType(long value) { this.manaUseType = value; }
+
+    public long getType() { return type; }
+    public void setType(long value) { this.type = value; }
+
+    public long getIconID() { return iconID; }
+    public void setIconID(long value) { this.iconID = value; }
+
+    public String[] getDescription() { return description; }
+    public void setDescription(String[] value) { this.description = value; }
+
+    public Skill[] getSkills() { return skills; }
+    public void setSkills(Skill[] value) { this.skills = value; }
+
+    public String getDamInfo() { return damInfo; }
+    public void setDamInfo(String value) { this.damInfo = value; }
 }

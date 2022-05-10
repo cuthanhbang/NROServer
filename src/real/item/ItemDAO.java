@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import real.player.Player;
 import server.DBService;
+import server.Manager;
 
 public class ItemDAO {
 
@@ -15,8 +16,8 @@ public class ItemDAO {
         Connection conn = DBService.gI().getConnection();
         try {
             PreparedStatement ps = conn.prepareStatement("INSERT INTO item(id,quantity) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(2, tempId);
-            ps.setInt(3, 1);
+            ps.setInt(1, tempId);
+            ps.setInt(2, 1);
             if (ps.executeUpdate() == 1) {
                 ResultSet rs = ps.getGeneratedKeys();
                 if (rs.first()) {
@@ -55,7 +56,7 @@ public class ItemDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 ItemOption option = new ItemOption();
-                option.optionTemplate = ItemData.iOptionTemplates[rs.getInt("option_id")];
+                option.optionTemplate = Manager.iOptionTemplates.get(rs.getInt("option_id"));
                 option.param = rs.getShort("param");
                 item.itemOptions.add(option);
             }
@@ -129,7 +130,7 @@ public class ItemDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 ItemOption option = new ItemOption();
-                option.optionTemplate = ItemData.iOptionTemplates[rs.getInt("option_id")];
+                option.optionTemplate = Manager.iOptionTemplates.get(rs.getInt("option_id"));
                 option.param = rs.getInt("param");
                 item.itemOptions.add(option);
             }

@@ -1,5 +1,6 @@
 package real.item;
 
+import server.Manager;
 import server.Util;
 
 public class ItemOption {
@@ -14,7 +15,7 @@ public class ItemOption {
 
     public ItemOption(int tempId, int param) {
         this.id = tempId;
-        this.optionTemplate = ItemData.iOptionTemplates[tempId];
+        this.optionTemplate = Manager.iOptionTemplates.get(tempId);
         this.param = param;
     }
 

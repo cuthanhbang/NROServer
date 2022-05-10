@@ -16,6 +16,7 @@ import real.item.ItemTemplate;
 import real.map.Map;
 import real.skill.Skill;
 import real.skill.SkillData;
+import real.skill.SkillTemplate;
 import server.DBService;
 import server.Manager;
 import server.Util;
@@ -111,7 +112,7 @@ public class PlayerDAO {
 
 
     public static void updateDB(Player player) {
-        String UPDATE_PLAYER = "UPDATE player SET power=?,vang=?,luong=?,luong_khoa=?,clan_id=?,task_id=?,head=?,where_id=?,where_x=?,where_y=?,maxluggage=?,maxbox=?,hp_goc=?,mp_goc=?,dame_goc=?,def_goc=?,crit_goc=?,tiem_nang=?,itembody=?,itembag=?,itembox=?,nhapthe=? WHERE account_id=?";
+        String UPDATE_PLAYER = "UPDATE player SET power=?,vang=?,luong=?,luong_khoa=?,clan_id=?,task_id=?,head=?,where_id=?,where_x=?,where_y=?,maxluggage=?,maxbox=?,hp_goc=?,mp_goc=?,dame_goc=?,def_goc=?,crit_goc=?,tiem_nang=?,skill=?,itembody=?,itembag=?,itembox=?,nhapthe=? WHERE account_id=?";
         Connection conn;
         JSONArray jarr = new JSONArray();
         PreparedStatement ps;
@@ -142,28 +143,33 @@ public class PlayerDAO {
             ps.setInt(17, player.critGoc);
             ps.setLong(18, player.tiemNang);
             byte j;
+            for(j=0;j<player.skill.size();++j){
+                jarr.add(SkillTemplate.ObjectItem(player.skill.get(j)));
+            }
+            ps.setString(19, jarr.toJSONString());
+            jarr.clear();
             for(j = 0; j < player.ItemBody.length; ++j) {
                 if (player.ItemBody[j] != null && player.ItemBody[j].id != -1) {
                     jarr.add(ItemTemplate.ObjectItem(player.ItemBody[j], j));
                 }
             }
-            ps.setString(19, jarr.toJSONString());
+            ps.setString(20, jarr.toJSONString());
             jarr.clear();
             for(j = 0; j < player.ItemBag.length; ++j) {
                 if (player.ItemBag[j] != null && player.ItemBag[j].id != -1) {
                     jarr.add(ItemTemplate.ObjectItem(player.ItemBag[j], j));
                 }
             }
-            ps.setString(20, jarr.toJSONString());
+            ps.setString(21, jarr.toJSONString());
             jarr.clear();
             for(j = 0; j < player.ItemBox.length; ++j) {
                 if (player.ItemBox[j] != null && player.ItemBox[j].id != -1) {
                     jarr.add(ItemTemplate.ObjectItem(player.ItemBox[j], j));
                 }
             }
-            ps.setString(21, jarr.toJSONString());
-            ps.setInt(22, player.NhapThe);
-            ps.setInt(23, player.account_id);
+            ps.setString(22, jarr.toJSONString());
+            ps.setInt(23, player.NhapThe);
+            ps.setInt(24, player.account_id);
             if (ps.executeUpdate() == 1) {
             }
             conn.commit();

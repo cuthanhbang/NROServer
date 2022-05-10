@@ -3,35 +3,62 @@ package real.skill;
 import org.json.simple.JSONObject;
 
 public class Skill {
-    
-	public SkillTemplate template;
 
-	public short skillId;
+	private long skillID;
+	private long point;
+	private long powRequire;
+	private long coolDown;
+	private long lastTimeUseThisSkill;
+	private long dx;
+	private long dy;
+	private long maxFight;
+	private long manaUse;
+	private Object options;
+	private boolean paintCanNotUseSkill;
+	private long damage;
+	private String moreInfo;
+	private long price;
 
-	public int point;
+	public long getSkillID() { return skillID; }
+	public void setSkillID(long value) { this.skillID = value; }
 
-	public long powRequire;
+	public long getPoint() { return point; }
+	public void setPoint(long value) { this.point = value; }
 
-	public int coolDown;
+	public long getPowRequire() { return powRequire; }
+	public void setPowRequire(long value) { this.powRequire = value; }
 
-	public long lastTimeUseThisSkill;
+	public long getCoolDown() { return coolDown; }
+	public void setCoolDown(long value) { this.coolDown = value; }
 
-	public int dx;
+	public long getLastTimeUseThisSkill() { return lastTimeUseThisSkill; }
+	public void setLastTimeUseThisSkill(long value) { this.lastTimeUseThisSkill = value; }
 
-	public int dy;
+	public long getDx() { return dx; }
+	public void setDx(long value) { this.dx = value; }
 
-	public int maxFight;
+	public long getDy() { return dy; }
+	public void setDy(long value) { this.dy = value; }
 
-	public int manaUse;
+	public long getMaxFight() { return maxFight; }
+	public void setMaxFight(long value) { this.maxFight = value; }
 
-	public SkillOption[] options;
+	public long getManaUse() { return manaUse; }
+	public void setManaUse(long value) { this.manaUse = value; }
 
-	public boolean paintCanNotUseSkill;
+	public Object getOptions() { return options; }
+	public void setOptions(Object value) { this.options = value; }
 
-	public short damage;
+	public boolean getPaintCanNotUseSkill() { return paintCanNotUseSkill; }
+	public void setPaintCanNotUseSkill(boolean value) { this.paintCanNotUseSkill = value; }
 
-	public String moreInfo;
+	public long getDamage() { return damage; }
+	public void setDamage(long value) { this.damage = value; }
 
-	public short price;
+	public String getMoreInfo() { return moreInfo; }
+	public void setMoreInfo(String value) { this.moreInfo = value; }
+
+	public long getPrice() { return price; }
+	public void setPrice(long value) { this.price = value; }
         
 }

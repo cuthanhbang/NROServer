@@ -329,6 +329,7 @@ public class Cmd
 	protected static byte MAP_CHANGE = -23;
 
 
+
 	protected static byte MAP_CLEAR = -22;
 
 

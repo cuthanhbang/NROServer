@@ -477,19 +477,19 @@ public class Zone {
         }
     }
 
-    public void attackMob(Session session, Player pl, int id) {
-        Message msg;
-        try {
-            msg = new Message(54);
-            msg.writer().writeInt(pl.id);
-            msg.writer().writeByte(pl.selectSkill.skillId);
-            msg.writer().writeByte(id);
-            session.sendMessage(msg);
-            msg.cleanup();
-
-        } catch (Exception e) {
-        }
-    }
+//    public void attackMob(Session session, Player pl, int id) {
+//        Message msg;
+//        try {
+//            msg = new Message(54);
+//            msg.writer().writeInt(pl.id);
+//            msg.writer().writeByte(pl.selectSkill.skillId);
+//            msg.writer().writeByte(id);
+//            session.sendMessage(msg);
+//            msg.cleanup();
+//
+//        } catch (Exception e) {
+//        }
+//    }
 
     public void MOB_MAX_HP(Player p, int mob, int hp) throws IOException {
         Message m;
@@ -556,7 +556,7 @@ public class Zone {
         }
         m = new Message(54);
         m.writer().writeInt(p.id);
-        m.writer().writeByte(p.selectSkill.skillId);
+        m.writer().writeByte((byte)p.selectSkill.getSkillID());
         for (byte i = 0; i < arMob.length; i++) {
             m.writer().writeByte(arMob[i].tempId);
         }

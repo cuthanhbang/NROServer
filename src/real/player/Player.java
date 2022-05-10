@@ -1,6 +1,8 @@
 package real.player;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -101,7 +103,7 @@ public class Player {
 
     public Skill getSkill(int id) {
         for (Skill skl : this.skill) {
-            if (skl.skillId == id) {
+            if ((int)skl.getSkillID() == id) {
                 return skl;
             }
         }
@@ -208,34 +210,34 @@ public class Player {
         }
         return -1;
     }
-    public int getPramSkill(int id) {
-        try {
-            if (this == null) {
-                return 0;
-            }
-            int param = 0;
-            SkillTemplate data;
-            SkillOptionTemplate temp;
-            for (Skill sk : this.skill) {
-                data = SkillTemplate.Templates(sk.skillId);
-                if (data.type == 0 || data.type == 2 || sk.skillId == this.CSkill || data.type == 4 || data.type == 3) {
-                    temp = SkillTemplate.Templates((byte) sk.skillId, (byte) sk.point);
-                    for (Option op : temp.options) {
-                        if (op.id == id) {
-                            param += op.param;
-                            break;
-                        }
-                    }
-                }
-            }
-            return param;
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-    public int percentIce() {
-        return this.getPramSkill(69);
-    }
+//    public int getPramSkill(int id) {
+//        try {
+//            if (this == null) {
+//                return 0;
+//            }
+//            int param = 0;
+//            SkillTemplate data;
+//            SkillOptionTemplate temp;
+//            for (Skill sk : this.skill) {
+//                data = SkillTemplate.Templates(sk.skillId);
+//                if (data.type == 0 || data.type == 2 || sk.skillId == this.CSkill || data.type == 4 || data.type == 3) {
+//                    temp = SkillTemplate.Templates((byte) sk.skillId, (byte) sk.point);
+//                    for (Option op : temp.options) {
+//                        if (op.id == id) {
+//                            param += op.param;
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+//            return param;
+//        } catch (Exception e) {
+//            return 0;
+//        }
+//    }
+//    public int percentIce() {
+//        return this.getPramSkill(69);
+//    }
     public int getHpFull() {
         int hp = hpFull;
         if(ItemBody[1] != null){
@@ -988,7 +990,11 @@ public class Player {
     public static Player setup(int account_id) {
         try {
             synchronized (Server.LOCK_MYSQL) {
-                ResultSet rs = SQLManager.stat.executeQuery("SELECT * FROM `player` WHERE `account_id`LIKE'" + account_id + "';");
+                Connection conn = DBService.gI().getConnection();
+//        try {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM `player` WHERE `account_id`LIKE " + account_id  );
+            ResultSet rs = ps.executeQuery();
+//                 rs = SQLManager.stat.executeQuery("SELECT * FROM `player` WHERE `account_id`LIKE'" + account_id + "';");
                 if (rs != null && rs.first()) {
                     Player player = new Player();
                     player.account_id=rs.getInt("account_id");
@@ -1026,6 +1032,7 @@ public class Player {
                     player.NhapThe = rs.getInt("nhapthe");
                     player.critFull = rs.getByte("crit_goc");
                     JSONArray jar = (JSONArray) JSONValue.parse(rs.getString("skill"));
+                    Util.log("skiii-----------------------------------------> "+jar);
                     JSONObject job;
                     int index;
                     if (jar != null) {
@@ -1035,7 +1042,9 @@ public class Player {
                             job = (JSONObject)JSONValue.parse(jar.get(index).toString());
                             int id = Integer.parseInt(job.get("id").toString());
                             int level = Integer.parseInt(job.get("point").toString());
-                            skill = player.nClass.getSkillTemplate(id).skills[level - 1];
+                            skill.setSkillID(id);
+                            skill.setPoint(level);
+                            Util.log("skiii-----------------------------------------> "+skill.getSkillID());
                             player.skill.add(skill);
                             job.clear();
                         }
@@ -1117,7 +1126,7 @@ public class Player {
         this.ngoc += (int)x;
         return (int)x;
     }
-    public void openBookSkill(int  index, byte sid) {
+    public void openBookSkill(int  index, int sid) {
         if (this.getSkill(sid) != null) {
             this.sendAddchatYellow("Skill Đã Được Học");
         } else {
@@ -1125,49 +1134,71 @@ public class Player {
             try {
                 this.ItemBag[index] = null;
                 Skill skill = new Skill();
-                skill.skillId =  sid;
-                skill.point = 1;
+                skill.setSkillID(sid);
+                skill.setPoint(1L);
 //                int id = Integer.parseInt(job.get("id").toString());
 //                int level = Integer.parseInt(job.get("point").toString());
 //                skill = this.nClass.getSkillTemplate(skill.skillId).skills[skill.point - 1];
 //                player.skill.add(skill);
-                Util.log("skill--------Id--------> "+skill.skillId);
-                Util.log("skill--------Lever--------> "+skill.point);
+
 
                 this.skill.add(skill);
-                Service.gI().loadPlayer(this.session, this);
-                Service.gI().updateItemBag(this);
+
+
 //                Service.gI().updateSkill(this.session);
 //                Controller.getInstance().sendInfo(this.session);
-//              this. loadSkill();
+//                this. loadSkill();
                 m = new Message(43);
-                m.writer().writeByte(-103);
-//                m.writer().writeByte(index);
-                m.writer().writeByte(skills.size());
-                for (Skill skillss : skills) {
-                    m.writer().writeShort(skillss.skillId);
-                }
+//                m.writer().writeByte(0);
+                m.writer().writeByte(index);
+//                Util.log("skill--------Idsss--------> "+skill.template.id);
+//                Util.log("skill--------Idsss--------> "+skill.template.name);
+                m.writer().writeShort((short) skill.getSkillID());
+//                m.writer().writeShort(skill.point);
+                Util.log("skill--------Idsss--------> "+skill.getSkillID());
+                Util.log("skill--------Levesssr--------> "+skill.getPoint());
+                m.writer().flush();
+
+                this.session.sendMessage(m);
+                m.cleanup();
+                m = new Message(-30);
+                m.writer().writeByte(23);
+
+                m.writer().writeShort((short) skill.getSkillID());
+//
+//                Util.log("skill--------Id--------> "+skill.skillId);
+//                Util.log("skill--------Lever--------> "+skill.point);
+
                 m.writer().flush();
                 this.session.sendMessage(m);
                 m.cleanup();
+                Service.gI().loadPlayer(this.session, this);
+                Service.gI().updateItemBag(this);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
+
+
     public void loadSkill() {
         Message m = null;
         try{
+
             m = new Message(-30);
 
-            m.writer().writeByte(-125);
+            m.writer().writeByte(2);
 
-//            m.writer().writeInt(this.getHpFull());
-//            m.writer().writeInt(this.getMpFull());
+//            m.writer().writeByte(this.getSpeed());
+            m.writer().writeInt(this.getMpFull());
+            m.writer().writeInt(this.getHpFull());
 
-            m.writer().writeByte(skills.size());
-            for (Skill skill : skills) {
-                m.writer().writeShort(skill.skillId);
+            m.writer().writeByte(this.skill.size());
+            for (Skill skill : this.skill) {
+                m.writer().writeShort((short) skill.getSkillID());
+//                m.writer().writeShort(skill.point);
+                Util.log("skill--------Idsss--------> "+skill.getSkillID());
+                Util.log("skill--------Levesssr--------> "+skill.getPoint());
             }
             m.writer().flush();
             this.session.sendMessage(m);
@@ -1178,5 +1209,6 @@ public class Player {
                 m.cleanup();
             }
         }
+
     }
 }
