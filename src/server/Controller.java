@@ -292,7 +292,7 @@ public class Controller {
                     break;
                 case 11:
                     byte modId = m.reader().readByte();
-                    Service.gI().requestModTemplate(_session, modId);
+                    Service.gI().requestModTemplate(player, modId);
                     break;
                 case 21:
                     //Chon khu vuc

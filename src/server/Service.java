@@ -416,15 +416,15 @@ public class Service {
         }
     }
 
-    public void requestModTemplate(Session session, int id) {
+    public void requestModTemplate(Player p, int id) {
         Message msg;
         try {
-            byte[] mob = FileIO.readFile("data/mob/" + id);
+            byte[] mob = FileIO.readFile("data/mob/x"+p.session.zoomLevel + "/" + id);
             msg = new Message(11);
 //            msg.writer().writeInt(id);
 //            msg.writer().writeInt(mob.length);
             msg.writer().write(mob);
-            session.sendMessage(msg);
+            p.session.sendMessage(msg);
             msg.cleanup();
         } catch (Exception e) {
         }
