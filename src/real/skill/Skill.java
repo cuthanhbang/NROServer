@@ -3,7 +3,7 @@ package real.skill;
 import org.json.simple.JSONObject;
 
 public class Skill {
-
+	private SkillTemplate template;
 	private long skillID;
 	private long point;
 	private long powRequire;
@@ -19,6 +19,13 @@ public class Skill {
 	private String moreInfo;
 	private long price;
 
+
+	public  static JSONObject ObjectSkill(Skill skill){
+		JSONObject put= new JSONObject();
+		put.put((Object) "id",(Object) skill.getSkillID());
+		put.put((Object) "point",(Object) skill.getPoint());
+		return put;
+	}
 	public long getSkillID() { return skillID; }
 	public void setSkillID(long value) { this.skillID = value; }
 
@@ -48,7 +55,8 @@ public class Skill {
 
 	public Object getOptions() { return options; }
 	public void setOptions(Object value) { this.options = value; }
-
+	public SkillTemplate getSkillTemplate() { return template; }
+	public void setSkillTemplate(SkillTemplate value) { this.template = value; }
 	public boolean getPaintCanNotUseSkill() { return paintCanNotUseSkill; }
 	public void setPaintCanNotUseSkill(boolean value) { this.paintCanNotUseSkill = value; }
 

@@ -30,6 +30,7 @@ public class Server {
     }
     public void init() {
         ItemData.loadDataItem();
+//        Service.gI().loadeffData();
         menu = new Menu();
 
         manager = new Manager();

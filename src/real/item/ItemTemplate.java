@@ -11,7 +11,7 @@ import org.json.simple.JSONValue;
 public class ItemTemplate {
 
     public int id;
-    public byte skill;
+    public int skill;
     public byte type;
 
     public byte gender;

@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import jdk.nashorn.internal.parser.JSONParser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -16,6 +17,7 @@ import org.json.simple.JSONValue;
 import real.clan.Clan;
 import real.clan.ClanManager;
 import real.item.Item;
+
 import static real.item.ItemDAO.loadOptionsItem;
 import static real.skill.Skills.skills;
 
@@ -65,7 +67,7 @@ public class Player {
     public long tiemNang;
     public NClass nClass;
     public Clan clan;
-    public Skill selectSkill;
+    public Skill[] selectSkill;
     public byte[] KSkill = null;
     public byte[] OSkill = null;
     public short CSkill = -1;
@@ -89,6 +91,7 @@ public class Player {
     public byte critFull;
     public short defFull;
     public int NhapThe = 0;
+
     public Player() {
         this.ItemBag = null;
         this.ItemBody = null;
@@ -96,19 +99,20 @@ public class Player {
         this.nearPlayers = new ArrayList<>();
         this.skill = new ArrayList<>();
     }
-    
+
     public Zone getPlace() {
         return zone;
     }
 
     public Skill getSkill(int id) {
         for (Skill skl : this.skill) {
-            if ((int)skl.getSkillID() == id) {
+            if ((int) skl.getSkillID() == id) {
                 return skl;
             }
         }
         return null;
     }
+
     public short getDefaultBody() {
         if (this.gender == 0) {
             return 57;
@@ -119,6 +123,7 @@ public class Player {
         }
         return -1;
     }
+
     public synchronized void upHP(int hpup) {
         if (this.isdie) {
             return;
@@ -133,6 +138,53 @@ public class Player {
         }
     }
 
+    public int getLeverSkill(int id) {
+        for (int i = 0; i < this.skill.size(); ++i) {
+            Util.log("is----------------->" + this.skill.get(i).getSkillID());
+            Util.log("is----------------->ID" + id);
+            if (this.skill.get(i).getSkillID() ==id-1) {
+                return (int) this.skill.get(i).getPoint();
+            }else  {
+
+            }
+        }
+        return -1;
+    }
+
+    public void removeList(int id) {
+        for (int i = 0; i < this.skill.size(); ++i) {
+            if (this.skill.get(i).getSkillID() == id-1) {
+                this.skill.remove(i);
+            }
+        }
+
+    }
+
+    public void useSkillNotForcus(Player player) throws IOException {
+
+        Util.log("skill--------Idsss--------> " + player.selectSkill[0].getSkillTemplate().getType());
+
+        SkillTemplate template = player.selectSkill[0].getSkillTemplate();
+        Util.log("skill--------Levesssr--------> " + player.selectSkill[0].getPoint());
+        switch ((int) template.getType()) {
+
+            case 3:
+                Message m;
+                m = new Message(-30);
+                m.writer().writeByte(15);
+                m.writer().writeShort((int) player.selectSkill[0].getSkillID());
+//                m.writer().writeShort(skill.point);
+
+                m.writer().flush();
+
+                this.session.sendMessage(m);
+                break;
+            default:
+
+                break;
+        }
+    }
+
     public synchronized void upHPGOhome(int hpup) {
 
         this.hp += hpup;
@@ -141,11 +193,12 @@ public class Player {
             this.hp = this.getHpFull();
 
         }
-       if(this.hp>0){
-           this.isdie=false;
-       }
+        if (this.hp > 0) {
+            this.isdie = false;
+        }
         this.zone.liveFromDead(this);
     }
+
     public short getDefaultLeg() {
         if (this.gender == 0) {
             return 58;
@@ -158,15 +211,15 @@ public class Player {
     }
 
     public short PartHead() {
-        if(NhapThe == 1 && gender == 1){
+        if (NhapThe == 1 && gender == 1) {
             return 391;
         }
-        if(NhapThe == 1 && (gender == 0||gender == 2)){
+        if (NhapThe == 1 && (gender == 0 || gender == 2)) {
             return 383;
         }
-        if (this.ItemBody[5] != null && NhapThe ==0) {
-            for(Item iad : ItemBody[5].entrys){
-                if(ItemBody[5].id == iad.idTemp){
+        if (this.ItemBody[5] != null && NhapThe == 0) {
+            for (Item iad : ItemBody[5].entrys) {
+                if (ItemBody[5].id == iad.idTemp) {
                     return (short) iad.headTemp;
                 }
             }
@@ -174,12 +227,12 @@ public class Player {
         return head;
     }
 
-    public  short PartBody() {
-        if(NhapThe == 1 && (gender == 0||gender == 2)){
-            return (short) (PartHead()+1);
+    public short PartBody() {
+        if (NhapThe == 1 && (gender == 0 || gender == 2)) {
+            return (short) (PartHead() + 1);
         }
-        if (this.ItemBody[5] != null && NhapThe ==0) {
-            return (short) (PartHead()+1);
+        if (this.ItemBody[5] != null && NhapThe == 0) {
+            return (short) (PartHead() + 1);
         }
         if (this.ItemBody[0] == null) {
             return getDefaultBody();
@@ -188,11 +241,11 @@ public class Player {
     }
 
     public short Leg() {
-        if(NhapThe == 1 && (gender == 0||gender == 2)){
-            return (short) (PartHead()+2);
+        if (NhapThe == 1 && (gender == 0 || gender == 2)) {
+            return (short) (PartHead() + 2);
         }
-        if (this.ItemBody[5] != null && NhapThe ==0) {
-            return (short) (PartHead()+2);
+        if (this.ItemBody[5] != null && NhapThe == 0) {
+            return (short) (PartHead() + 2);
         }
         if (this.ItemBody[1] == null) {
             return getDefaultLeg();
@@ -210,7 +263,8 @@ public class Player {
         }
         return -1;
     }
-//    public int getPramSkill(int id) {
+
+    //    public int getPramSkill(int id) {
 //        try {
 //            if (this == null) {
 //                return 0;
@@ -240,10 +294,10 @@ public class Player {
 //    }
     public int getHpFull() {
         int hp = hpFull;
-        if(ItemBody[1] != null){
+        if (ItemBody[1] != null) {
             hp += ItemBody[1].getParamItemByID(6);
         }
-        if(ItemBody[5] != null){
+        if (ItemBody[5] != null) {
             hp += hp * ItemBody[5].getParamItemByID(77) / 100;
         }
         return hp;
@@ -251,24 +305,25 @@ public class Player {
 
     public int getMpFull() {
         int mp = mpFull;
-        if(ItemBody[3] != null){
-             mp += ItemBody[3].getParamItemByID(7);
+        if (ItemBody[3] != null) {
+            mp += ItemBody[3].getParamItemByID(7);
         }
-        if(ItemBody[5] != null){
+        if (ItemBody[5] != null) {
             mp += mp * ItemBody[5].getParamItemByID(103) / 100;
         }
         return mp;
     }
-    public void ChatBunma(){
-        try{
-            while(true){
+
+    public void ChatBunma() {
+        try {
+            while (true) {
                 Calendar calendar = Calendar.getInstance();
                 int sec = calendar.get(13);
-                if((sec %20 == 0 || sec == 0)) {
-                    for (int i=0; i< PlayerManger.gI().conns.size(); i++) {
-                        if(PlayerManger.gI().conns.get(i) != null && PlayerManger.gI().conns.get(i).player != null) {
+                if ((sec % 20 == 0 || sec == 0)) {
+                    for (int i = 0; i < PlayerManger.gI().conns.size(); i++) {
+                        if (PlayerManger.gI().conns.get(i) != null && PlayerManger.gI().conns.get(i).player != null) {
                             Player player = PlayerManger.gI().conns.get(i).player;
-                            if(player != null && player.map == map){
+                            if (player != null && player.map == map) {
                                 player.zone.chat(player, "Bunma đẹp troaiiiii=))");
                             }
                         }
@@ -276,35 +331,36 @@ public class Player {
                 }
                 Thread.sleep(1000L);
             }
-        }catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     public int getDamFull() {
         int dam = damFull;
-        if(ItemBody[2] != null){    
+        if (ItemBody[2] != null) {
             dam += ItemBody[2].getParamItemByID(0);
         }
-        if(ItemBody[5] != null){        
-            dam += dam  * ItemBody[5].getParamItemByID(50) / 100;
+        if (ItemBody[5] != null) {
+            dam += dam * ItemBody[5].getParamItemByID(50) / 100;
         }
         return dam;
     }
 
     public short getDefFull() {
         short def = defFull;
-        if(ItemBody[0] != null){
+        if (ItemBody[0] != null) {
             def += ItemBody[0].getParamItemByID(47);
         }
         return def;
     }
 
     public byte getCritFull() {
-         byte crit = critFull;
-        if(ItemBody[4] != null){
+        byte crit = critFull;
+        if (ItemBody[4] != null) {
             crit += ItemBody[4].getParamItemByID(14);
         }
-        if(ItemBody[5] != null){
+        if (ItemBody[5] != null) {
             crit += crit * ItemBody[5].getParamItemByID(14) / 100;
         }
         return crit;
@@ -360,6 +416,7 @@ public class Player {
             e.printStackTrace();
         }
     }
+
     public void updateItemBox() {
         Message msg;
         try {
@@ -389,6 +446,7 @@ public class Player {
             e.printStackTrace();
         }
     }
+
     public byte getBoxNull() {
         byte num = 0;
         for (byte i = 0; i < this.ItemBox.length; ++i) {
@@ -403,7 +461,7 @@ public class Player {
         byte num = 0;
         for (byte i = 0; i < this.ItemBag.length; ++i) {
             if (this.ItemBag[i] == null) {
-                num ++;
+                num++;
             }
         }
         return num;
@@ -436,7 +494,7 @@ public class Player {
     public byte getIndexBagid(int id) {
         byte i;
         Item item;
-        for(i = 0; i < this.ItemBag.length; ++i) {
+        for (i = 0; i < this.ItemBag.length; ++i) {
             item = this.ItemBag[i];
             if (item != null && item.id == id) {
                 return i;
@@ -468,7 +526,7 @@ public class Player {
     public byte getIndexBagNotItem() {
         byte i;
         Item item;
-        for(i = 0; i < this.ItemBag.length; ++i) {
+        for (i = 0; i < this.ItemBag.length; ++i) {
             item = this.ItemBag[i];
             if (item == null) {
                 return i;
@@ -511,12 +569,12 @@ public class Player {
     public Boolean addItemToBag(Item item) {
         try {
             byte index = this.getIndexBagid(item.id);
-            if (index != -1 && (item.id == 595 || item.id ==194)) {
+            if (index != -1 && (item.id == 595 || item.id == 194)) {
                 Item item2 = this.ItemBag[index];
                 item.quantity = item2.quantity + item.quantityTemp;
                 this.ItemBag[index] = item;
                 return true;
-            }else{
+            } else {
                 index = this.getIndexBagNotItem();
                 if (getBagNull() == 0) {
                     this.sendAddchatYellow("Hành trang không đủ chỗ trống!");
@@ -533,11 +591,11 @@ public class Player {
 
     }
 
-    public void itemBagToBox(int index){
-       Item item = getIndexBag(index);
-        if(item != null){
+    public void itemBagToBox(int index) {
+        Item item = getIndexBag(index);
+        if (item != null) {
             byte indexBox = getIndexBoxid(item.id);
-            if (indexBox != -1 && (item.id == 595 || item.id ==194)) {
+            if (indexBox != -1 && (item.id == 595 || item.id == 194)) {
                 removeItemBag(index);
                 Item item2 = ItemBox[indexBox];
                 item2.quantity += item.quantity;
@@ -548,7 +606,7 @@ public class Player {
                 }
                 indexBox = getIndexBoxNotItem();
                 removeItemBag(index);
-                this.ItemBox[indexBox] = item; 
+                this.ItemBox[indexBox] = item;
                 item.quantity = item.quantityTemp;
             }
             Service.gI().updateItemBox(this);
@@ -559,10 +617,9 @@ public class Player {
 
     public void itemBoxToBag(int index) {
         Item item = getIndexBox(index);
-        if(item != null)
-        {
-            byte indexBag = getIndexBagid(item.id);  
-            if ( indexBag != -1 && (item.id == 595 || item.id ==194)) {
+        if (item != null) {
+            byte indexBag = getIndexBagid(item.id);
+            if (indexBag != -1 && (item.id == 595 || item.id == 194)) {
                 removeItemBox(index);
                 Item item2 = ItemBag[indexBag];
                 item2.quantity += item.quantity;
@@ -591,8 +648,7 @@ public class Player {
                     if (item.template.type == 32) {
                         index = 6;
                     }
-                }
-                else {
+                } else {
                     Service.gI().serverMessage(this.session, "Sức mạnh không đủ yêu cầu");
                 }
             } else {
@@ -609,23 +665,22 @@ public class Player {
         }
     }
 
-    public void itemBodyToBag(int index) { 
+    public void itemBodyToBag(int index) {
         if (getBagNull() == 0) {
             sendAddchatYellow("Hành trang không đủ chỗ trống");
             return;
         }
         Item _item = this.ItemBody[index];
-        if(_item != null){
+        if (_item != null) {
             byte indexBag = getIndexBagNotItem();
             removeItemBody(index);
             this.ItemBag[indexBag] = _item;
             Service.gI().updateItemBody(this);
-            Service.gI().updateItemBag( this);
+            Service.gI().updateItemBag(this);
             Service.gI().loadPoint(session, this);
-            if(ItemBody[5] != null || NhapThe == 1){
+            if (ItemBody[5] != null || NhapThe == 1) {
                 Service.gI().LoadCaiTrang(this, 1, PartHead(), PartHead() + 1, PartHead() + 2);
-            }
-            else{
+            } else {
                 Service.gI().LoadCaiTrang(this, 1, PartHead(), PartBody(), Leg());
             }
         }
@@ -637,15 +692,14 @@ public class Player {
         Service.gI().updateItemBag(this);
         Service.gI().updateItemBody(this);
         Service.gI().loadPoint(session, this);
-        if(ItemBody[5] != null || NhapThe == 1){
+        if (ItemBody[5] != null || NhapThe == 1) {
             Service.gI().LoadCaiTrang(this, 1, PartHead(), PartHead() + 1, PartHead() + 2);
-        }
-        else{
+        } else {
             Service.gI().LoadCaiTrang(this, 1, PartHead(), PartBody(), Leg());
         }
     }
 
-   public void removeItemBag(int index){
+    public void removeItemBag(int index) {
         this.ItemBag[index] = null;
     }
 
@@ -706,6 +760,7 @@ public class Player {
         } catch (IOException iOException) {
         }
     }
+
     public void removeItemBody(int index) {
         this.ItemBody[index] = null;
     }
@@ -726,7 +781,7 @@ public class Player {
             if ((this.hpGoc + pointHp) <= getHpMpLimit()) {
                 if (useTiemNang(tiemNangUse)) {
                     hpGoc += pointHp;
-                    hpFull = hpGoc ;
+                    hpFull = hpGoc;
                 }
             } else {
                 Service.gI().serverMessage(this.session, "Vui lòng mở giới hạn sức mạnh");
@@ -763,7 +818,7 @@ public class Player {
             if ((this.defGoc + point) <= getDefLimit()) {
                 if (useTiemNang(tiemNangUse)) {
                     defGoc += point;
-                   defFull = defGoc;
+                    defFull = defGoc;
                 }
             } else {
                 Service.gI().serverMessage(this.session, "Vui lòng mở giới hạn sức mạnh");
@@ -980,6 +1035,7 @@ public class Player {
         } catch (IOException ex) {
         }
     }
+
     public void requestItem(int typeUI) throws IOException {
         Message m = new Message(23);
         m.writer().writeByte(typeUI);
@@ -987,17 +1043,18 @@ public class Player {
         session.sendMessage(m);
         m.cleanup();
     }
+
     public static Player setup(int account_id) {
         try {
             synchronized (Server.LOCK_MYSQL) {
                 Connection conn = DBService.gI().getConnection();
 //        try {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM `player` WHERE `account_id`LIKE " + account_id  );
-            ResultSet rs = ps.executeQuery();
+                PreparedStatement ps = conn.prepareStatement("SELECT * FROM `player` WHERE `account_id`LIKE " + account_id);
+                ResultSet rs = ps.executeQuery();
 //                 rs = SQLManager.stat.executeQuery("SELECT * FROM `player` WHERE `account_id`LIKE'" + account_id + "';");
                 if (rs != null && rs.first()) {
                     Player player = new Player();
-                    player.account_id=rs.getInt("account_id");
+                    player.account_id = rs.getInt("account_id");
                     player.id = rs.getInt("id");
                     player.taskId = rs.getByte("task_id");
                     player.name = rs.getString("name");
@@ -1032,19 +1089,19 @@ public class Player {
                     player.NhapThe = rs.getInt("nhapthe");
                     player.critFull = rs.getByte("crit_goc");
                     JSONArray jar = (JSONArray) JSONValue.parse(rs.getString("skill"));
-                    Util.log("skiii-----------------------------------------> "+jar);
+                    Util.log("skiii-----------------------------------------> " + jar);
                     JSONObject job;
                     int index;
                     if (jar != null) {
                         job = null;
                         for (index = 0; index < jar.size(); index++) {
                             Skill skill = new Skill();
-                            job = (JSONObject)JSONValue.parse(jar.get(index).toString());
+                            job = (JSONObject) JSONValue.parse(jar.get(index).toString());
                             int id = Integer.parseInt(job.get("id").toString());
                             int level = Integer.parseInt(job.get("point").toString());
                             skill.setSkillID(id);
                             skill.setPoint(level);
-                            Util.log("skiii-----------------------------------------> "+skill.getSkillID());
+                            Util.log("skiii-----------------------------------------> " + skill.getSkillID());
                             player.skill.add(skill);
                             job.clear();
                         }
@@ -1096,10 +1153,11 @@ public class Player {
             return null;
         }
     }
+
     public void luongMessage(long luongup) {
         Message m = null;
         try {
-            if(this.session != null) {
+            if (this.session != null) {
                 this.upluong(luongup);
                 m = new Message(-30);
                 m.writer().writeByte(-72);
@@ -1110,80 +1168,174 @@ public class Player {
         } catch (Exception var4) {
             var4.printStackTrace();
         } finally {
-            if(m != null) {
+            if (m != null) {
                 m.cleanup();
             }
         }
 
     }
+
     public synchronized int upluong(long x) {
-        long luongnew = (long)this.ngoc + x;
+        long luongnew = (long) this.ngoc + x;
         if (luongnew > 2000000000L) {
             x = 2000000000 - this.ngoc;
         } else if (luongnew < -2000000000L) {
             x = -2000000000 - this.ngoc;
         }
-        this.ngoc += (int)x;
-        return (int)x;
+        this.ngoc += (int) x;
+        return (int) x;
     }
-    public void openBookSkill(int  index, int sid) {
-        if (this.getSkill(sid) != null) {
-            this.sendAddchatYellow("Skill Đã Được Học");
-        } else {
-            Message m = null;
-            try {
-                this.ItemBag[index] = null;
-                Skill skill = new Skill();
-                skill.setSkillID(sid);
-                skill.setPoint(1L);
-//                int id = Integer.parseInt(job.get("id").toString());
-//                int level = Integer.parseInt(job.get("point").toString());
-//                skill = this.nClass.getSkillTemplate(skill.skillId).skills[skill.point - 1];
-//                player.skill.add(skill);
 
+    public void openBookSkill(int index, int sid) {
+        Message m = null;
+        try {
+            int lever = Integer.parseInt(ItemBag[index].template.name.split("lv")[1]);
+            Util.log("lever---------------->"+lever);
+            Util.log("leverSkill---------------->"+getLeverSkill(sid));
+            String name = ItemBag[index].template.name;
+            if (ItemBag[index].template.gender == this.gender) {
+                if (ItemBag[index].template.strRequire <= this.power) {
+                    if (lever == getLeverSkill(sid) + 1) {
+                        removeList(sid);
+                        this.ItemBag[index] = null;
+                        Skill skill1 = new Skill();
+                        skill1.setSkillID(sid);
+                        skill1.setPoint(lever);
+//                   skill1=this.nClass.getSkillTemplate((int) skill1.getSkillID()).getSkills()[(int) (skill1.getPoint()-1)];
+                        this.skill.add(skill1);
+                        m = new Message(43);
 
-                this.skill.add(skill);
+                        m.writer().writeByte(index);
 
+                        m.writer().writeShort((short) skill1.getSkillID());
+//
+                        Util.log("skill--------Idusss--------> " + skill1.getSkillID());
+                        Util.log("skill--------Levesssr--------> " + skill1.getPoint());
+                        m.writer().flush();
 
-//                Service.gI().updateSkill(this.session);
-//                Controller.getInstance().sendInfo(this.session);
-//                this. loadSkill();
-                m = new Message(43);
-//                m.writer().writeByte(0);
-                m.writer().writeByte(index);
-//                Util.log("skill--------Idsss--------> "+skill.template.id);
-//                Util.log("skill--------Idsss--------> "+skill.template.name);
-                m.writer().writeShort((short) skill.getSkillID());
-//                m.writer().writeShort(skill.point);
-                Util.log("skill--------Idsss--------> "+skill.getSkillID());
-                Util.log("skill--------Levesssr--------> "+skill.getPoint());
-                m.writer().flush();
+                        this.session.sendMessage(m);
+                        m.cleanup();
+                        m = new Message(-30);
+                        m.writer().writeByte(62);
 
-                this.session.sendMessage(m);
-                m.cleanup();
-                m = new Message(-30);
-                m.writer().writeByte(23);
-
-                m.writer().writeShort((short) skill.getSkillID());
+                        m.writer().writeShort((short) skill1.getSkillID());
 //
 //                Util.log("skill--------Id--------> "+skill.skillId);
 //                Util.log("skill--------Lever--------> "+skill.point);
 
-                m.writer().flush();
-                this.session.sendMessage(m);
-                m.cleanup();
-                Service.gI().loadPlayer(this.session, this);
-                Service.gI().updateItemBag(this);
-            } catch (Exception e) {
-                e.printStackTrace();
+                        m.writer().flush();
+                        this.session.sendMessage(m);
+                        m.cleanup();
+                        Service.gI().loadPlayer(this.session, this);
+                        Service.gI().updateItemBag(this);
+//                        if (ItemBody[5] == null || NhapThe == 1) {
+//                            Service.gI().LoadCaiTrang(this, 1, PartHead(), PartHead() + 1, PartHead() + 2);
+//                        } else {
+//                            Service.gI().LoadCaiTrang(this, 1, PartHead(), PartBody(), Leg());
+//                        }
+                        sendAddchatYellow("Học thành công kĩ năng " + name);
+
+                    } else if (lever == getLeverSkill(sid)) {
+                        this.ItemBag[index] = null;
+                        Skill skill1 = new Skill();
+                        skill1.setSkillID(sid);
+                        skill1.setPoint(1L);
+//                   skill1=this.nClass.getSkillTemplate((int) skill1.getSkillID()).getSkills()[(int) (skill1.getPoint()-1)];
+                        this.skill.add(skill1);
+                        m = new Message(43);
+
+                        m.writer().writeByte(index);
+
+                        m.writer().writeShort((short) skill1.getSkillID());
+//
+                        Util.log("skill--------Idsdss--------> " + skill1.getSkillID());
+                        Util.log("skill--------Levesssr--------> " + skill1.getPoint());
+                        m.writer().flush();
+
+                        this.session.sendMessage(m);
+                        m.cleanup();
+                        m = new Message(-30);
+                        m.writer().writeByte(23);
+
+                        m.writer().writeShort((short) skill1.getSkillID());
+//
+//                Util.log("skill--------Id--------> "+skill.skillId);
+//                Util.log("skill--------Lever--------> "+skill.point);
+
+                        m.writer().flush();
+                        this.session.sendMessage(m);
+                        m.cleanup();
+                        Service.gI().loadPlayer(this.session, this);
+                        Service.gI().updateItemBag(this);
+                    } else {
+                        sendAddchatYellow("Học cấp độ " + (lever - 1) + "trước đê ");
+                    }
+                } else {
+                    Service.gI().serverMessage(this.session, "Sức mạnh Không đủ yêu cầu");
+                }
+            } else {
+                Service.gI().serverMessage(this.session, "Sai hành tinh");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+//        if (this.getSkill(sid) != null) {
+//            this.sendAddchatYellow("Skill Đã Được Học");
+//        } else {
+//            Message m = null;
+//            try {
+//                this.ItemBag[index] = null;
+//                Skill skill = new Skill();
+//                skill.setSkillID(sid);
+//                skill.setPoint(1L);
+////                int id = Integer.parseInt(job.get("id").toString());
+////                int level = Integer.parseInt(job.get("point").toString());
+////                skill = this.nClass.getSkillTemplate(skill.skillId).skills[skill.point - 1];
+////                player.skill.add(skill);
+//
+//
+//                this.skill.add(skill);
+//
+//
+////                Service.gI().updateSkill(this.session);
+////                Controller.getInstance().sendInfo(this.session);
+////                this. loadSkill();
+//                m = new Message(43);
+////                m.writer().writeByte(0);
+//                m.writer().writeByte(index);
+////                Util.log("skill--------Idsss--------> "+skill.template.id);
+////                Util.log("skill--------Idsss--------> "+skill.template.name);
+//                m.writer().writeShort((short) skill.getSkillID());
+////                m.writer().writeShort(skill.point);
+//                Util.log("skill--------Idsss--------> "+skill.getSkillID());
+//                Util.log("skill--------Levesssr--------> "+skill.getPoint());
+//                m.writer().flush();
+//
+//                this.session.sendMessage(m);
+//                m.cleanup();
+//                m = new Message(-30);
+//                m.writer().writeByte(23);
+//
+//                m.writer().writeShort((short) skill.getSkillID());
+////
+////                Util.log("skill--------Id--------> "+skill.skillId);
+////                Util.log("skill--------Lever--------> "+skill.point);
+//
+//                m.writer().flush();
+//                this.session.sendMessage(m);
+//                m.cleanup();
+//                Service.gI().loadPlayer(this.session, this);
+//                Service.gI().updateItemBag(this);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
 
     public void loadSkill() {
         Message m = null;
-        try{
+        try {
 
             m = new Message(-30);
 
@@ -1197,15 +1349,15 @@ public class Player {
             for (Skill skill : this.skill) {
                 m.writer().writeShort((short) skill.getSkillID());
 //                m.writer().writeShort(skill.point);
-                Util.log("skill--------Idsss--------> "+skill.getSkillID());
-                Util.log("skill--------Levesssr--------> "+skill.getPoint());
+                Util.log("skill--------Idsss--------> " + skill.getSkillID());
+                Util.log("skill--------Levesssr--------> " + skill.getPoint());
             }
             m.writer().flush();
             this.session.sendMessage(m);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if(m != null) {
+            if (m != null) {
                 m.cleanup();
             }
         }

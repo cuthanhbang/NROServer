@@ -13,6 +13,7 @@ import org.json.simple.JSONValue;
 import real.clan.ClanManager;
 import real.map.Map;
 import real.player.Player;
+import real.skill.EffectTeamPlate;
 import real.skill.Skill;
 import real.skill.SkillData;
 import server.*;
@@ -85,7 +86,45 @@ public class ItemData {
                     Util.log("id " + j + " part " + array[i][j]);
                 }
             }
+//            is.close();
+//            dis.close();
+//             conn = DBService.gI().getConnection();
+//
+//                is = new ByteArrayInputStream(FileIO.readFile("res/cache/data/NR_effect"));
+//                 dis = new DataInputStream(is);
+//                dis.readByte();
+//                dis.readByte();
+//                dis.readByte();
+//                PreparedStatement ps=null;
+//                ps = conn.prepareStatement("INSERT INTO effect(id, type, name,iconId) VALUES(?,?,?,?)");
+//                int num = (int) dis.readShort();
+////            Util.debug("idEfffff " +dis.readUTF() );
+//                for (int j = 0; j < num; j++) {
+//                    ps.setInt(1,j);
+//                    ps.setInt(2,dis.readByte());
+//                    ps.setString(3,"");
+//                    ps.setInt(4,dis.readShort());
+////                    EffectTeamPlate.EffectTemplate it = new EffectTeamPlate.EffectTemplate();
+////                    it.id = j;
+////                    it.type = dis.readByte();
+////
+////                    it.name = "dis.readUTF()";
+////
+////                    it.iconId = dis.readShort();
+////
+////                    Util.debug("idEfffff " + dis.readByte() + " name" + it.name );
+////
+////                    EffectTeamPlate.EffectTemplate.entrys.add(it);
+//
+//                    ps.addBatch();
+//                }
+//            ps.executeBatch();
+//            conn.commit();
 
+//                ps.close();
+//                conn.close();
+            is.close();
+            dis.close();
 //            is = new ByteArrayInputStream(FileIO.readFile("res/cache/NRitem2"));
 //            dis = new DataInputStream(is);
 //            dis.readByte();

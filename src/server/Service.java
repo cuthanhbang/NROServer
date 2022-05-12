@@ -2,13 +2,11 @@ package server;
 
 import cache.Part;
 import cache.PartImage;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+
+import java.io.*;
 import java.nio.CharBuffer;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Scanner;
 import org.joda.time.DateTime;
@@ -17,6 +15,7 @@ import real.clan.Member;
 import real.clan.ClanManager;
 import real.item.Item;
 import real.item.ItemOption;
+import real.item.ItemTemplate;
 import real.item.useItem;
 import real.map.Map;
 import real.map.Mob;
@@ -25,6 +24,7 @@ import real.map.Npc;
 import real.map.WayPoint;
 import real.player.Player;
 import real.player.PlayerManger;
+import real.skill.EffectTeamPlate;
 import server.io.Session;
 import real.skill.Skill;
 import static server.GameScr.saveFile;
@@ -414,6 +414,51 @@ public class Service {
             msg.cleanup();
         } catch (Exception e) {
         }
+//        Connection conn = DBService.gI().getConnection();
+//        try {
+//            PreparedStatement ps=null;
+//            ps = conn.prepareStatement("INSERT INTO effect(id, type, name,iconId) VALUES(?,?,?,?)");
+//            int i;
+//            for(i=0;i<eff_data)
+//        }catch (Exception e){
+//
+//        }
+    }
+
+    public void loadeffData() {
+//        Connection conn = DBService.gI().getConnection();
+//        try {
+//            ByteArrayInputStream is = new ByteArrayInputStream(FileIO.readFile("res/cache/data/NR_effect"));
+//            DataInputStream dis = new DataInputStream(is);
+//            dis.readByte();
+//            dis.readByte();
+//            dis.readByte();
+//            PreparedStatement ps=null;
+//            ps = conn.prepareStatement("INSERT INTO effect(id, type, name,iconId) VALUES(?,?,?,?)");
+//            int num = (int) dis.readShort();
+//            for (int j = 0; j < num; j++) {
+//                ps.setInt(1,j);
+//                ps.setInt(2,dis.readByte());
+//                ps.setString(3,dis.readUTF());
+//                ps.setInt(4,dis.readShort());
+//                EffectTeamPlate.EffectTemplate it = new EffectTeamPlate.EffectTemplate();
+//                it.id = j;
+//                it.type = dis.readByte();
+//
+//                it.name = dis.readUTF();
+//
+//                it.iconId = dis.readShort();
+//
+//                Util.debug("idEfffff " + it.id + " name" + it.name );
+//
+//                EffectTeamPlate.EffectTemplate.entrys.add(it);
+//
+//            }
+//            ps.close();
+//            conn.close();
+//        }catch (Exception e){
+//
+//        }
     }
 
     public void requestModTemplate(Player p, int id) {

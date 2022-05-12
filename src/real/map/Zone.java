@@ -556,7 +556,7 @@ public class Zone {
         }
         m = new Message(54);
         m.writer().writeInt(p.id);
-        m.writer().writeByte((byte)p.selectSkill.getSkillID());
+        m.writer().writeByte((byte)p.selectSkill[0].getSkillID());
         for (byte i = 0; i < arMob.length; i++) {
             m.writer().writeByte(arMob[i].tempId);
         }

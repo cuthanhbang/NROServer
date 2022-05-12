@@ -10,6 +10,7 @@ import real.skill.Skill;
 import real.skill.SkillOptionTemplate;
 import real.skill.SkillTemplate;
 import real.skill.Skills;
+import server.Util;
 import server.io.Message;
 
 public class UseSkill {
@@ -19,8 +20,11 @@ public class UseSkill {
         Skill skill = p.getSkill(idSkill);
         if (skill != null && System.currentTimeMillis() > p.CSkilldelay) {
             Skill data = Skills.get(idSkill);
+
             if (data.getSkillID() != 0) {
+
             p.CSkill = idSkill;
+
             }
         }
     }

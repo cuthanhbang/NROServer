@@ -1,5 +1,7 @@
 package server;
 
+import real.skill.NClass;
+import real.skill.SkillTemplate;
 import server.io.Message;
 import server.io.Session;
 import java.io.IOException;
@@ -117,6 +119,7 @@ public class Controller {
                 case -66:
                     int effId = m.reader().readShort();
                     Service.gI().effData(_session, effId);
+//                    Service.gI().loadeffData(_session, effId);
                     break;
                 case -63:
                     // id image logo clan
@@ -219,12 +222,27 @@ public class Controller {
 
                     break;
                 case -7:
+//                    byte b = m.reader().readByte();
+//                    player.x = m.reader().readShort();
+//                    player.y = m.reader().readShort();
+//                    Util.log("player x-------------->"+b +"\n" + "player y------------>"+player.y);
+//                    try {
+//
+//                    } catch (Exception e) {
+//                    }
+//                    player.zone.playerMove(player);
                     byte b = m.reader().readByte();
+                    if (b == 0) {
+                        player.move(m.reader().readShort(), player.y);
+                    } else {
+                        player.move(m.reader().readShort(), m.reader().readShort());
+                    }
                     try {
                         player.x = m.reader().readShort();
                         player.y = m.reader().readShort();
                     } catch (Exception e) {
                     }
+                    Util.log("player x-------------->"+player.x +"\n" + "player y------------>"+player.y);
                     player.zone.playerMove(player);
                     break;
                 case 6:
@@ -342,10 +360,17 @@ public class Controller {
                     break;
                 case 34:
                     short selectSkill = m.reader().readShort();
-                    player.selectSkill = player.getSkill(selectSkill);
+                    Util.log("skill select---------?" +selectSkill);
+
+                    player.selectSkill = player.nClass.getSkillTemplate(selectSkill).getSkills();
+
                     break;
                 case 35:
                     break;
+
+
+
+
                 case 44:
                     String text = m.reader().readUTF();
                     if (server.isDebug) {
@@ -376,9 +401,13 @@ public class Controller {
                     break;
                 //tấn công quái    
                 case 54:
+
                     player.getPlace().FightMob(player, m);
                     break;
                 // nhap
+                case -45:
+                            player.useSkillNotForcus(player);
+                    break;
                 case 88:
                     Draw.Draw(player, m);
                     break;

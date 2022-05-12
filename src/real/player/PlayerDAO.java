@@ -144,7 +144,7 @@ public class PlayerDAO {
             ps.setLong(18, player.tiemNang);
             byte j;
             for(j=0;j<player.skill.size();++j){
-                jarr.add(SkillTemplate.ObjectItem(player.skill.get(j)));
+                jarr.add(Skill.ObjectSkill(player.skill.get(j)));
             }
             ps.setString(19, jarr.toJSONString());
             jarr.clear();

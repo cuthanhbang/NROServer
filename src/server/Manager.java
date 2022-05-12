@@ -39,6 +39,8 @@ import real.map.Npc;
 import real.map.WayPoint;
 import real.player.Player;
 import static server.SQLManager.conn;
+
+import real.skill.EffectTeamPlate;
 import server.io.Message;
 import server.GameScr;
 public class Manager {
@@ -265,7 +267,7 @@ public class Manager {
 
                 iOptionTemplates.add(iOptionTemplate);
                 for(int s=0;s<iOptionTemplates.size();++s){
-                    Util.debug("id name optionss "+  iOptionTemplates.get(s).name);
+//                    Util.debug("id name optionss "+  iOptionTemplates.get(s).name);
                 }
 //
 
@@ -285,7 +287,7 @@ public class Manager {
                 item.type = Byte.parseByte(res.getString("type"));
                 item.gender = Byte.parseByte(res.getString("gender"));
                 item.name = res.getString("name");
-                item.skill=(byte)res.getInt("skillid");
+                item.skill=res.getInt("skillid");
                 item.description = res.getString("description");
                 item.level = Byte.parseByte(res.getString("level"));
                 item.strRequire = Integer.parseInt(res.getString("strRequire"));
@@ -390,6 +392,7 @@ public class Manager {
             res.close();
             ps.close();
             res.close();
+
         } catch (Exception var14) {
             var14.printStackTrace();
             System.exit(0);
