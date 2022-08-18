@@ -39,6 +39,8 @@ import real.map.Npc;
 import real.map.WayPoint;
 import real.player.Player;
 import static server.SQLManager.conn;
+
+import real.skill.EffectTeamPlate;
 import server.io.Message;
 import server.GameScr;
 public class Manager {
@@ -265,7 +267,7 @@ public class Manager {
 
                 iOptionTemplates.add(iOptionTemplate);
                 for(int s=0;s<iOptionTemplates.size();++s){
-                    Util.debug("id name optionss "+  iOptionTemplates.get(s).name);
+//                    Util.debug("id name optionss "+  iOptionTemplates.get(s).name);
                 }
 //
 
@@ -389,6 +391,7 @@ public class Manager {
             res.close();
             ps.close();
             res.close();
+
         } catch (Exception var14) {
             var14.printStackTrace();
             System.exit(0);

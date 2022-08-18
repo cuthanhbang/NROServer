@@ -3,9 +3,15 @@ package real.skill;
 import org.json.simple.JSONObject;
 
 public class Skill {
+<<<<<<< Updated upstream
+	private SkillTemplate template;
+	private long skillID;
+	private long point;
+=======
 	public SkillTemplate template;
 	public long skillID;
 	public long point;
+>>>>>>> Stashed changes
 	private long powRequire;
 	public long coolDown;
 	private long lastTimeUseThisSkill;
@@ -19,6 +25,13 @@ public class Skill {
 	private String moreInfo;
 	private long price;
 
+
+	public  static JSONObject ObjectSkill(Skill skill){
+		JSONObject put= new JSONObject();
+		put.put((Object) "id",(Object) skill.getSkillID());
+		put.put((Object) "point",(Object) skill.getPoint());
+		return put;
+	}
 	public long getSkillID() { return skillID; }
 	public void setSkillID(long value) { this.skillID = value; }
 

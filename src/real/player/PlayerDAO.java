@@ -144,7 +144,11 @@ String CREATE_PLAYER = "INSERT INTO player(account_id,name,power,vang,luong,luon
             ps.setLong(18, player.tiemNang);
             byte j;
             for(j=0;j<player.skill.size();++j){
+<<<<<<< Updated upstream
+                jarr.add(Skill.ObjectSkill(player.skill.get(j)));
+=======
                 jarr.add(SkillTemplate.ObjectSkill(player.skill.get(j)));
+>>>>>>> Stashed changes
             }
             ps.setString(19, jarr.toJSONString());
             jarr.clear();

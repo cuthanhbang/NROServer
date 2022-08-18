@@ -1,5 +1,7 @@
 package server;
 
+import real.skill.NClass;
+import real.skill.SkillTemplate;
 import server.io.Message;
 import server.io.Session;
 import java.io.IOException;
@@ -117,6 +119,7 @@ public class Controller {
                 case -66:
                     int effId = m.reader().readShort();
                     Service.gI().effData(_session, effId);
+//                    Service.gI().loadeffData(_session, effId);
                     break;
                 case -63:
                     // id image logo clan
@@ -355,14 +358,23 @@ public class Controller {
                     break;
                 case 34:
                     short selectSkill = m.reader().readShort();
-                    player.selectSkill = player.getSkill(selectSkill);
+                    Util.log("skill select---------?" +selectSkill);
+
+                    player.selectSkill = player.nClass.getSkillTemplate(selectSkill).getSkills();
+
                     break;
                 case 35:
                     break;
 
+<<<<<<< Updated upstream
+
+
+
+=======
                 case 45:
 
                     break;
+>>>>>>> Stashed changes
                 case 44:
                     String text = m.reader().readUTF();
                     if (server.isDebug) {
@@ -397,7 +409,11 @@ public class Controller {
                     break;
                 // nhap
                 case -45:
+<<<<<<< Updated upstream
+                            player.useSkillNotForcus(player);
+=======
 
+>>>>>>> Stashed changes
                     break;
                 case 88:
                     Draw.Draw(player, m);
