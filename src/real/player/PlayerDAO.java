@@ -25,7 +25,7 @@ import server.io.Session;
 public class PlayerDAO {
 
     public static boolean create(Session userId, String name, int gender, int head) {
-        String CREATE_PLAYER = "INSERT INTO player(account_id,name,power,vang,luong,luong_khoa,gender,head,where_id,where_x,where_y,limit_power,hp_goc,mp_goc,dame_goc,def_goc,crit_goc,tiem_nang,maxluggage,maxbox,skill,itembody,itembag,itembox,nhapthe) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+String CREATE_PLAYER = "INSERT INTO player(account_id,name,power,vang,luong,luong_khoa,gender,head,where_id,where_x,where_y,limit_power,hp_goc,mp_goc,dame_goc,def_goc,crit_goc,tiem_nang,maxluggage,maxbox,skill,itembody,itembag,itembox,nhapthe) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         boolean check = false;
         JSONArray jarr = new JSONArray();
         JSONObject put = new JSONObject();
@@ -54,18 +54,18 @@ public class PlayerDAO {
             ps.setInt(12, 1);
             switch (gender) {
                 case 0:
-                    ps.setInt(13, 500);
+                    ps.setInt(13, 200);
                     ps.setInt(14, 100);
                     ps.setInt(15, 12);
                     break;
                 case 1:
-                    ps.setInt(13, 500);
+                    ps.setInt(13, 100);
                     ps.setInt(14, 200);
                     ps.setInt(15, 12);
                     break;
                 case 2:
-                    ps.setInt(13, 500);
-                    ps.setInt(14, 500);
+                    ps.setInt(13, 100);
+                    ps.setInt(14, 100);
                     ps.setInt(15, 15);
                     break;
             }
@@ -144,7 +144,11 @@ public class PlayerDAO {
             ps.setLong(18, player.tiemNang);
             byte j;
             for(j=0;j<player.skill.size();++j){
+<<<<<<< Updated upstream
                 jarr.add(Skill.ObjectSkill(player.skill.get(j)));
+=======
+                jarr.add(SkillTemplate.ObjectSkill(player.skill.get(j)));
+>>>>>>> Stashed changes
             }
             ps.setString(19, jarr.toJSONString());
             jarr.clear();
@@ -174,7 +178,6 @@ public class PlayerDAO {
             }
             conn.commit();
             conn.close();
-//            System.out.println("player updated  " + player.id);
         } catch (Exception e) {
         }
     }

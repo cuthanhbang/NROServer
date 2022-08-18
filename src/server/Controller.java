@@ -195,8 +195,6 @@ public class Controller {
                     Service.gI().sendMessage(_session, -29, "1630679748828_-29_2_r");
                     Service.gI().versionImageSource(_session);
                     Service.gI().sendMessage(_session, -111, "1630679748814_-111_r");
-
-
                     break;
                 case -33:
                 case -23:
@@ -368,15 +366,20 @@ public class Controller {
                 case 35:
                     break;
 
+<<<<<<< Updated upstream
 
 
 
+=======
+                case 45:
+
+                    break;
+>>>>>>> Stashed changes
                 case 44:
                     String text = m.reader().readUTF();
                     if (server.isDebug) {
                         if (text.contains("m ")) {
                             int mapId = Integer.parseInt(text.replace("m ", ""));
-
                             Map maptele = Manager.getMapid(mapId);
                             teleportToMAP(player, maptele);
                         } else if (text.contains("smtn ")) {
@@ -406,7 +409,11 @@ public class Controller {
                     break;
                 // nhap
                 case -45:
+<<<<<<< Updated upstream
                             player.useSkillNotForcus(player);
+=======
+
+>>>>>>> Stashed changes
                     break;
                 case 88:
                     Draw.Draw(player, m);

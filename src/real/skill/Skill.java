@@ -3,11 +3,17 @@ package real.skill;
 import org.json.simple.JSONObject;
 
 public class Skill {
+<<<<<<< Updated upstream
 	private SkillTemplate template;
 	private long skillID;
 	private long point;
+=======
+	public SkillTemplate template;
+	public long skillID;
+	public long point;
+>>>>>>> Stashed changes
 	private long powRequire;
-	private long coolDown;
+	public long coolDown;
 	private long lastTimeUseThisSkill;
 	private long dx;
 	private long dy;

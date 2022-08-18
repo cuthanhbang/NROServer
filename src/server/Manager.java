@@ -281,7 +281,6 @@ public class Manager {
             i = 0;
             JSONObject job;
             while (res.next()) {
-                
                 ItemTemplate item = new ItemTemplate();
                 item.id = Short.parseShort(res.getString("id"));
                 item.type = Byte.parseByte(res.getString("type"));

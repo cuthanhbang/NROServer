@@ -19,11 +19,9 @@ public class DBService {
     public Connection getConnection() {
         Connection conn = null;
         try {
-            String url = "jdbc:mysql://127.0.0.1:3306/server";
+            String url = "jdbc:mysql://127.0.0.1/nro";
             String user = "root";
-            String password = "";
-
-            // create a connection to the database
+            String password = "duy15022007";
             conn = DriverManager.getConnection(url, user, password);
         } catch (Exception e) {
             e.printStackTrace();

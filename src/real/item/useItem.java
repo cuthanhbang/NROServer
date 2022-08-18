@@ -52,12 +52,8 @@ public class useItem {
                     break;
 
                 default: {
-                    Util.log("item name ------------>"+ item.info);
                     ItemTemplate data = ItemTemplate.ItemTemplateID(item.id);
-                    Util.log("item name ------------>"+ data.skill);
                     p.openBookSkill(index,data.skill);
-
-//                    p.sendAddchatYellow("Chức năng đang được cập nhật");
                     break;
                 }
             }
