@@ -43,7 +43,7 @@ public class SkillData {
                     for (int l = 0; l < nClasss[j].getSkillTempLates()[k].getSkills().length; l++) {
                         nClasss[j].getSkillTempLates()[k].getSkills()[l] = new Skill();
                         nClasss[j].getSkillTempLates()[k].getSkills()[l].setSkillID(dis.readShort());
-//                        nClasss[j].getSkillTempLates()[k].getSkills()[l].template = ;
+
                         nClasss[j].getSkillTempLates()[k].getSkills()[l].setPoint( (int) dis.readByte());
                         nClasss[j].getSkillTempLates()[k].getSkills()[l].setPowRequire( dis.readLong());
                         nClasss[j].getSkillTempLates()[k].getSkills()[l].setManaUse((int) dis.readShort());
@@ -54,6 +54,8 @@ public class SkillData {
                         nClasss[j].getSkillTempLates()[k].getSkills()[l].setDamage( dis.readShort());
                         nClasss[j].getSkillTempLates()[k].getSkills()[l].setPrice( dis.readShort());
                         nClasss[j].getSkillTempLates()[k].getSkills()[l].setMoreInfo(dis.readUTF());
+                        nClasss[j].getSkillTempLates()[k].getSkills()[l].setSkillTemplate(nClasss[j].getSkillTempLates()[k]);
+                        Util.log("sadasdasdasdasd "+ nClasss[j].getSkillTempLates()[k].getSkills()[l].getSkillTemplate().getType());
 //                        Skills.add(nClasss[j].getSkillTempLates()[k].getSkills()[l]);
                     }
                 }

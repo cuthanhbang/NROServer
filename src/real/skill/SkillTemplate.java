@@ -21,7 +21,7 @@ public class SkillTemplate {
         return this.type == 1;
     }
 
-    private long id;
+    public long id;
     private long classID;
     private String name;
     private long maxPoint;
@@ -29,15 +29,13 @@ public class SkillTemplate {
     private long type;
     private long iconID;
     private String[] description;
-    private Skill[] skills;
+    public Skill[] skills;
     private String damInfo;
 
-    public static JSONObject ObjectItem(Skill item) {
+    public static JSONObject ObjectSkill(Skill skill) {
         JSONObject put = new JSONObject();
-        put.put((Object)"id", (Object)item.getSkillID());
-        put.put((Object)"point", (Object)item.getPoint());
-
-
+        put.put((Object)"id", (Object)skill.template.id);
+        put.put((Object)"point", (Object)skill.point);
         return put;
     }
 

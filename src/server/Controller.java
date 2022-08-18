@@ -192,8 +192,6 @@ public class Controller {
                     Service.gI().sendMessage(_session, -29, "1630679748828_-29_2_r");
                     Service.gI().versionImageSource(_session);
                     Service.gI().sendMessage(_session, -111, "1630679748814_-111_r");
-
-
                     break;
                 case -33:
                 case -23:
@@ -219,12 +217,27 @@ public class Controller {
 
                     break;
                 case -7:
+//                    byte b = m.reader().readByte();
+//                    player.x = m.reader().readShort();
+//                    player.y = m.reader().readShort();
+//                    Util.log("player x-------------->"+b +"\n" + "player y------------>"+player.y);
+//                    try {
+//
+//                    } catch (Exception e) {
+//                    }
+//                    player.zone.playerMove(player);
                     byte b = m.reader().readByte();
+                    if (b == 0) {
+                        player.move(m.reader().readShort(), player.y);
+                    } else {
+                        player.move(m.reader().readShort(), m.reader().readShort());
+                    }
                     try {
                         player.x = m.reader().readShort();
                         player.y = m.reader().readShort();
                     } catch (Exception e) {
                     }
+                    Util.log("player x-------------->"+player.x +"\n" + "player y------------>"+player.y);
                     player.zone.playerMove(player);
                     break;
                 case 6:
@@ -346,12 +359,15 @@ public class Controller {
                     break;
                 case 35:
                     break;
+
+                case 45:
+
+                    break;
                 case 44:
                     String text = m.reader().readUTF();
                     if (server.isDebug) {
                         if (text.contains("m ")) {
                             int mapId = Integer.parseInt(text.replace("m ", ""));
-
                             Map maptele = Manager.getMapid(mapId);
                             teleportToMAP(player, maptele);
                         } else if (text.contains("smtn ")) {
@@ -376,9 +392,13 @@ public class Controller {
                     break;
                 //tấn công quái    
                 case 54:
+
                     player.getPlace().FightMob(player, m);
                     break;
                 // nhap
+                case -45:
+
+                    break;
                 case 88:
                     Draw.Draw(player, m);
                     break;

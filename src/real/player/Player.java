@@ -133,6 +133,9 @@ public class Player {
         }
     }
 
+    public void  useSkillNotForcus(Player player,int idSkill){
+    }
+
     public synchronized void upHPGOhome(int hpup) {
 
         this.hp += hpup;
@@ -1032,7 +1035,6 @@ public class Player {
                     player.NhapThe = rs.getInt("nhapthe");
                     player.critFull = rs.getByte("crit_goc");
                     JSONArray jar = (JSONArray) JSONValue.parse(rs.getString("skill"));
-                    Util.log("skiii-----------------------------------------> "+jar);
                     JSONObject job;
                     int index;
                     if (jar != null) {
@@ -1044,7 +1046,7 @@ public class Player {
                             int level = Integer.parseInt(job.get("point").toString());
                             skill.setSkillID(id);
                             skill.setPoint(level);
-                            Util.log("skiii-----------------------------------------> "+skill.getSkillID());
+                            skill = player.nClass.getSkillTemplate((int)skill.skillID).skills[(int)skill.point - 1];
                             player.skill.add(skill);
                             job.clear();
                         }
@@ -1126,57 +1128,65 @@ public class Player {
         this.ngoc += (int)x;
         return (int)x;
     }
-    public void openBookSkill(int  index, int sid) {
-        if (this.getSkill(sid) != null) {
-            this.sendAddchatYellow("Skill Đã Được Học");
-        } else {
-            Message m = null;
-            try {
-                this.ItemBag[index] = null;
-                Skill skill = new Skill();
-                skill.setSkillID(sid);
-                skill.setPoint(1L);
-//                int id = Integer.parseInt(job.get("id").toString());
-//                int level = Integer.parseInt(job.get("point").toString());
-//                skill = this.nClass.getSkillTemplate(skill.skillId).skills[skill.point - 1];
-//                player.skill.add(skill);
-
-
-                this.skill.add(skill);
-
-
-//                Service.gI().updateSkill(this.session);
-//                Controller.getInstance().sendInfo(this.session);
-//                this. loadSkill();
-                m = new Message(43);
-//                m.writer().writeByte(0);
-                m.writer().writeByte(index);
-//                Util.log("skill--------Idsss--------> "+skill.template.id);
-//                Util.log("skill--------Idsss--------> "+skill.template.name);
-                m.writer().writeShort((short) skill.getSkillID());
-//                m.writer().writeShort(skill.point);
-                Util.log("skill--------Idsss--------> "+skill.getSkillID());
-                Util.log("skill--------Levesssr--------> "+skill.getPoint());
-                m.writer().flush();
-
-                this.session.sendMessage(m);
-                m.cleanup();
-                m = new Message(-30);
-                m.writer().writeByte(23);
-
-                m.writer().writeShort((short) skill.getSkillID());
-//
-//                Util.log("skill--------Id--------> "+skill.skillId);
-//                Util.log("skill--------Lever--------> "+skill.point);
-
-                m.writer().flush();
-                this.session.sendMessage(m);
-                m.cleanup();
-                Service.gI().loadPlayer(this.session, this);
-                Service.gI().updateItemBag(this);
-            } catch (Exception e) {
-                e.printStackTrace();
+    public boolean ItemKhien(Item item){
+        return item.id == 434 || item.id == 435||item.id == 436||item.id == 437||item.id == 438||item.id == 439 || item.id == 440;
+    }
+    public int getLevelSkill(int ID){
+        for(int i = 0 ; i < skill.size() ;i ++){
+            if(skill.get(i).template.id == ID){
+                return (int)skill.get(i).point;
             }
+        }
+        return -1;
+    }
+    
+     public void RemoveList(int ID){
+        for(int i = 0 ; i < skill.size() ;i ++){
+            if(skill.get(i).template.id == ID){
+                skill.remove(i);
+            }
+        }
+    }
+    public void openBookSkill(int  index, int sid) {
+        if(getLevelSkill(sid) == 7){
+            sendAddchatYellow("Đã Đạt Cấp Tối Đa");
+            return;
+        }
+         try {
+            int level = Integer.parseInt(ItemBag[index].template.name.split("lv")[1]);
+            String name  = ItemBag[index].template.name;
+            if (ItemBag[index].template.gender == this.gender || ItemKhien(ItemBag[index])) {
+                if (ItemBag[index].template.strRequire <= this.power) {
+                    if(level == (int)getLevelSkill(sid) + 1 || level == 1){
+                        RemoveList(sid);
+                        this.ItemBag[index] = null;
+                        Skill skill = new Skill();
+                        skill.setSkillID(sid);
+                        skill.setPoint(level);
+                        skill = this.nClass.getSkillTemplate((int)skill.skillID).skills[(int)skill.point - 1];
+                        this.skill.add(skill);
+                        Service.gI().loadPlayer(this.session, this);
+                        Service.gI().updateItemBag(this);
+                        if(ItemBody[5] != null || NhapThe == 1){
+                            Service.gI().LoadCaiTrang(this, 1, PartHead(), PartHead() + 1, PartHead() + 2);
+                        }
+                        else{
+                            Service.gI().LoadCaiTrang(this, 1, PartHead(), PartBody(), Leg());
+                        }
+                        sendAddchatYellow("Học Thành Công Kỹ Năng " + name);
+                    }
+                    else{
+                        sendAddchatYellow("Vui Lòng Học Cấp Độ " + (level - 1) +" Trước");
+                    }
+                }
+                else {
+                    Service.gI().serverMessage(this.session, "Sức mạnh không đủ yêu cầu");
+                }
+            } else {
+                Service.gI().serverMessage(this.session, "Sai hành tinh");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -1184,21 +1194,13 @@ public class Player {
     public void loadSkill() {
         Message m = null;
         try{
-
             m = new Message(-30);
-
-            m.writer().writeByte(2);
-
-//            m.writer().writeByte(this.getSpeed());
+            m.writer().writeByte(2);;
             m.writer().writeInt(this.getMpFull());
             m.writer().writeInt(this.getHpFull());
-
             m.writer().writeByte(this.skill.size());
             for (Skill skill : this.skill) {
                 m.writer().writeShort((short) skill.getSkillID());
-//                m.writer().writeShort(skill.point);
-                Util.log("skill--------Idsss--------> "+skill.getSkillID());
-                Util.log("skill--------Levesssr--------> "+skill.getPoint());
             }
             m.writer().flush();
             this.session.sendMessage(m);
@@ -1209,6 +1211,5 @@ public class Player {
                 m.cleanup();
             }
         }
-
     }
 }

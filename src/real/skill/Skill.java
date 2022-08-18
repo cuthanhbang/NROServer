@@ -3,11 +3,11 @@ package real.skill;
 import org.json.simple.JSONObject;
 
 public class Skill {
-
-	private long skillID;
-	private long point;
+	public SkillTemplate template;
+	public long skillID;
+	public long point;
 	private long powRequire;
-	private long coolDown;
+	public long coolDown;
 	private long lastTimeUseThisSkill;
 	private long dx;
 	private long dy;
@@ -48,7 +48,8 @@ public class Skill {
 
 	public Object getOptions() { return options; }
 	public void setOptions(Object value) { this.options = value; }
-
+	public SkillTemplate getSkillTemplate() { return template; }
+	public void setSkillTemplate(SkillTemplate value) { this.template = value; }
 	public boolean getPaintCanNotUseSkill() { return paintCanNotUseSkill; }
 	public void setPaintCanNotUseSkill(boolean value) { this.paintCanNotUseSkill = value; }
 

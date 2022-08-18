@@ -279,13 +279,12 @@ public class Manager {
             i = 0;
             JSONObject job;
             while (res.next()) {
-                
                 ItemTemplate item = new ItemTemplate();
                 item.id = Short.parseShort(res.getString("id"));
                 item.type = Byte.parseByte(res.getString("type"));
                 item.gender = Byte.parseByte(res.getString("gender"));
                 item.name = res.getString("name");
-                item.skill=(byte)res.getInt("skillid");
+                item.skill=res.getInt("skillid");
                 item.description = res.getString("description");
                 item.level = Byte.parseByte(res.getString("level"));
                 item.strRequire = Integer.parseInt(res.getString("strRequire"));
